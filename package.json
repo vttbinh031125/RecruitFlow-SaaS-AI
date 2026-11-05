@@ -1,0 +1,34 @@
+{
+  "name": "recruitflow",
+  "private": true,
+  "packageManager": "pnpm@10.34.9",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "pnpm --parallel --filter @recruitflow/web --filter @recruitflow/api dev",
+    "lint": "eslint .",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "build": "pnpm -r build",
+    "db:up": "docker compose up -d --wait",
+    "db:down": "docker compose down",
+    "db:generate": "pnpm --filter @recruitflow/api db:generate",
+    "db:migrate": "pnpm --filter @recruitflow/api db:migrate",
+    "db:seed": "pnpm --filter @recruitflow/api db:seed",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test:integration": "pnpm --filter @recruitflow/api test:integration",
+    "test:e2e": "pnpm --filter @recruitflow/web test:e2e",
+    "start": "pnpm --parallel --filter @recruitflow/web --filter @recruitflow/api start"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^24.0.0",
+    "eslint": "^10.14.0",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.72.1",
+    "prettier": "^3.6.0"
+  },
+  "license": "MIT"
+}

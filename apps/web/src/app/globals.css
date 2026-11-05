@@ -1,0 +1,29 @@
+@import 'tailwindcss';
+@theme {
+  --font-sans: 'Segoe UI', system-ui, sans-serif;
+}
+@layer base {
+  * {
+    border-color: #e2e8f0;
+  }
+}
+body {
+  margin: 0;
+  background: #f8fafc;
+  color: #0f172a;
+}
+input,
+textarea,
+select {
+  width: 100%;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 10px;
+  background: white;
+}
+label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 6px;
+}

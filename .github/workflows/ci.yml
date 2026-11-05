@@ -1,0 +1,66 @@
+name: CI
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      DATABASE_URL: postgresql://recruitflow:ci_only@127.0.0.1:5432/recruitflow_test
+      TEST_DATABASE_URL: postgresql://recruitflow:ci_only@127.0.0.1:5432/recruitflow_test
+      JWT_SECRET: ci-only-random-fixture-secret-not-for-production-2026
+      WEB_ORIGIN: http://localhost:5173
+      API_TARGET: http://127.0.0.1:3000
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: recruitflow
+          POSTGRES_PASSWORD: ci_only
+          POSTGRES_DB: recruitflow_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U recruitflow -d recruitflow_test"
+          --health-interval 5s --health-timeout 5s --health-retries 12
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 10.34.9
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm db:generate
+      - run: pnpm --filter @recruitflow/api exec prisma validate
+      - run: pnpm db:migrate
+      - run: pnpm lint
+      - run: pnpm format:check
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+      - run: pnpm test:integration
+      - run: pnpm db:seed
+      - run: pnpm --filter @recruitflow/web exec playwright install --with-deps chromium
+      - name: Browser workflows
+        run: |
+          pnpm --filter @recruitflow/api start > /tmp/recruitflow-api.log 2>&1 &
+          pnpm --filter @recruitflow/web start > /tmp/recruitflow-web.log 2>&1 &
+          for attempt in $(seq 1 60); do
+            if curl -fsS http://localhost:5173/api/health; then break; fi
+            sleep 1
+          done
+          pnpm test:e2e
+      - uses: actions/upload-artifact@v6
+        if: failure()
+        with:
+          name: test-results
+          path: |
+            apps/web/test-results
+            /tmp/recruitflow-api.log
+            /tmp/recruitflow-web.log

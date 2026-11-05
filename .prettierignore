@@ -1,0 +1,10 @@
+node_modules
+pnpm-lock.yaml
+.next
+dist
+.local
+apps/api/src/generated
+
+SPEC.md
+
+apps/web/next-env.d.ts
