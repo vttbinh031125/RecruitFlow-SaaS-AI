@@ -1,0 +1,6 @@
+interface:
+  display_name: 'Antigravity Review'
+  short_description: 'Review selected code with Argon Medium on request'
+  default_prompt: 'Use $antigravity-review to review the source files I select without editing them.'
+policy:
+  allow_implicit_invocation: false

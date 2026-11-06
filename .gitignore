@@ -1,3 +1,4 @@
+# Dependencies, builds and caches
 node_modules/
 .pnpm-store/
 dist/
@@ -5,15 +6,34 @@ coverage/
 .vite/
 .cache/
 *.tsbuildinfo
+.eslintcache
+out/
+
+# Local secrets and credentials
 .env
 .env.*
 !.env.example
+.envrc
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Local reports and temporary files
 *.log
 .local/
+*.tmp
+*.bak
+*.swp
+*.swo
+*~
+
+# Operating system metadata
 .DS_Store
 Thumbs.db
 Desktop.ini
 
+# Framework-generated files and browser test output
 .next/
 apps/api/src/generated/
 

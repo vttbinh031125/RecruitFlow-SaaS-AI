@@ -8,6 +8,8 @@ Small and medium-sized companies need a clear view of open roles and candidate p
 
 ## Key Features
 
+See the [Software Requirements Specification](docs/requirements.md) for detailed requirements, acceptance criteria, and planned scope.
+
 **Implemented**
 
 - Candidate registration/login and recruiter login with bcrypt and HttpOnly JWT cookies.
@@ -221,6 +223,20 @@ pnpm test:e2e
 Browser tests add synthetic E2E roles/applications to that dedicated database and test both sessions, human stage updates, demonstration AI, protected-page redirects, visible API failures and mobile width. Stop the servers and remove the session's DATABASE_URL override to return to the normal `.env` database. `createdb` is a one-time step; skip it when the named database already exists.
 
 [GitHub Actions](.github/workflows/ci.yml) configures install, migration, schema validation, lint, formatting, typecheck, Jest, builds, integration tests, seed and Chromium workflows with PostgreSQL. A hosted run is not claimed until the workflow runs on GitHub.
+
+### On-demand Antigravity review
+
+With authenticated Antigravity CLI (`agy`) on PATH, review selected source files using Gemini Argon Medium:
+
+```powershell
+pnpm review:antigravity -- apps/api/src/modules/auth/auth.service.ts apps/api/src/common/guards/auth.guard.ts
+```
+
+The project Codex skill `$antigravity-review` invokes the same command only when explicitly requested. It is not an automatic stop, commit or push hook. If the skill is not visible, reopen the Codex session; the terminal command is available immediately.
+
+Only selected text files are sent externally (maximum 200 KB). Environment files, ignored paths and files outside the repository are rejected. Inspect files for sensitive content before selecting them. Antigravity runs in an isolated temporary working directory with session-only denial of file, command, web and MCP tools. It cannot run tests or inspect missing context; Codex must verify its findings. No global settings are modified. Calls use your Antigravity quota, and reports are saved to ignored `.local/antigravity-review-*.json`.
+
+Run `pnpm test:review-hook` for input-boundary and response-parser tests without contacting a model. A live model call is not claimed as part of this setup.
 
 ## Development Roadmap
 

@@ -1,0 +1,6 @@
+interface:
+  display_name: 'DB & Integration Tests'
+  short_description: 'Validate Prisma changes and run isolated database tests'
+  default_prompt: 'Use $db-and-tests to validate Prisma changes and run the test suites against dedicated test databases.'
+policy:
+  allow_implicit_invocation: true
